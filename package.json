@@ -1,0 +1,23 @@
+{
+  "name": "professional-readme",
+  "version": "1.0.0",
+  "description": "app that generate a professional dynamic read me",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boyaye/professional-readMe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/boyaye/professional-readMe/issues"
+  },
+  "homepage": "https://github.com/boyaye/professional-readMe#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  }
+}

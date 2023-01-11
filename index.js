@@ -1,96 +1,150 @@
-const { table } = require("console");
 const fs = require("fs");
-
-const inquired = require("inquirer");
-
-// const NewReadme = ({title, Section, table, install, usege, contibution, license, text, question}) =>
-
-
-// console.log(NewReadme)
-// `
-// # professional-readMe
+const inquirer = require("inquirer");
+const option = require("util")
+const generateMake = require("./option/index2");
 
 
-// # Title of my project 
+function validateinput(data){
+    if (data != ""){
+        return true;
+    }else{
+        return "please enter the require question"
+    }
+};
 
-// -${title}
-// # sections entitled Description
-
-// -${Section}
-// # Table of Contents
-
-// -${table}
-//  # Installation
-
-//  -${install}
-//  # Usage 
-
-//  -${usege}
-//  # License
-
-//  -${license}
-// # Contributing
-
-// -${contibution}
-// # Tests
-// -${text}
-// # Questions
-
-// -${question}
-
-// `
-
-inquired
-  .prompt([
-    {
-        type: "input",
-        name: "title",
-        message: "What is the title of your project?",
+const questions = [{
+    type: 'input',
+    name: 'title',
+    message: 'What is the title of your repository?',
+    validate:validateinput
+  },
+  {
+    type: 'input',
+    name: 'description',
+    message: 'What is the description of your repository?',
+    validate:validateinput
     },
-    {
-        type: "input",
-        name: "description",
-        message: "Please enter a description of your project.",
+  {
+    type: 'confirm',
+    name: 'confirmInstallation',
+    message: 'Is there an installation process?'
     },
-    {
-        type: "input",
-        name: "installation",
-        message: "Please enter an explanation how to install the software, or commands for the program.",
-    },
-    {
-        type: "input",
-        name: "usage",
-        message: "Please describe how we can use this program/project.",
-    },
-    {
-        type: "list",
-        name: "license",
-        message: "Please select a license for this project.",
-        choices: [
-            "GNU AGPLv3",
-            "GNU GPLv3",
-            "GNU LGPLv3",
-            "Apache 2.0",
-            "Boost Software 1.0",
-            "MIT",
-            "Mozilla",
-        ],
-    },
-    {
-        type: "input",
-        name: "contributing",
-        message: "How can users contribute to your project.",
-    },
-    {
-        type: "input",
-        name: "tests",
-        message: "Please enter any testing instructions you would like to provide for this project.",
-    },
-  ])
-  .then((response) => {
-    const htmlPageContent = JSON.stringify(response);
+  {
+    type: 'input',
+    name: 'installation',
+    message: 'Please list installation instructions.',
+    when: ({ confirmInstallation }) => {
+      if (confirmInstallation) {
+        return true;
+      } else {
+        return "choose the right installation";
+      }
+    }
+  },
+  
+  {
+    type: 'confirm',
+    name: 'confirmUsage',
+    message: 'Would you like to give instructions for using your application?'
+  },
+  { 
+    type: 'input',
+    name: 'instructions',
+    message: 'Please list instructions for using your application.',
+    when: ({ confirmUsage }) => {
+      if (confirmUsage) {
+        return true;
+      } else {
+        return "fill in your instruction";
+      }
+    }
+  },
+  
+  {
+    type: 'confirm',
+    name: 'confirmContribution',
+    message: 'May other developers contribute to your repository?'
+  },
+  {
+    type: 'input',
+    name: 'contribution',
+    message: 'how would you allow other developers to contribute to your project .',
+    when: ({ confirmContribution }) => {
+      if (confirmContribution) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  {
+    type: 'confirm',
+    name: 'testConfirm',
+    message: 'Is testing available?'
+  },
+  {
+    type: 'input',
+    name: 'testing',
+    message: 'how would other users test your application.',
+    when: ({ testConfirm }) => {
+      if (testConfirm) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  {
+    type: 'checkbox',
+    name: 'license',
+    message: 'Please choose a license.',
+    choices: ['GNU AGPLv3', 'GNU GPLv3',
+      'GNU LGPLv3', 'Mozilla Public License 2.0',
+      'Apache License 2.0', 'MIT License', 'Boost Software License 1.0',
+      'The Unlicense'],
+    validate: validateinput
+  },
+  {
+    type: 'input',
+    name: 'username',
+    message: 'What is your GitHub username?',
+    validate:validateinput
+  },
+  {
+    type: 'input',
+    name: 'email',
+    message: 'What is your email address? ',
+    validate:validateinput
+  },
+  {
+    type: 'input',
+    name: 'questions',
+    message: 'Please list instructions for those who wish to contact you.',
+    validate:validateinput
+  }]; 
 
-    fs.writeFile('README.md', htmlPageContent, (err) =>
-      err ? console.log(err) : console.log('Successfully created index.html!')
-    );
-  });
+  function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, error => {
+      if (error) {
+        return console.log('Sorry there was an error : ' + error);
+      }
+    })
+  };
+
+  const createReadMe = option.promisify(writeToFile);
+
+  async function init() {
+    try {
+      const userAnswers = await inquirer.prompt(questions);
+      console.log('Thank you! Successful your request is being processed into your README.md: ', userAnswers);
+      const Markdown = generateMake(userAnswers);
+      console.log(Markdown);
+      await createReadMe('README2.md', Markdown);
+      
+    } catch (error) {
+      console.log('Sorry there was an error.' + error);
+    }
+  };
+  
+  
+  init();

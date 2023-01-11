@@ -1,2 +1,1 @@
-# professional-readMe
-app that generate a professional dynamic read me
+{"title":"jnbfjbsf","description":"sfbjkfdblf","installation":"jbdnfkbjkjbdf","usage":"jdbkjbkbdf","license":"Mozilla","contributing":"djkjbd","tests":"jbdbkjdg"}
